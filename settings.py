@@ -1,1 +1,2 @@
 FPS = 60
+SIZE_TILE = 80
