@@ -20,7 +20,7 @@ class Game:
         pygame.display.set_caption(title)
 
         self.ui_game = UiGame()
-        self.map = Map("test_map.txt", {"#": 1, ".": 2, "p": 3})
+        self.map = Map("big_map.txt")
 
     @staticmethod
     def terminate() -> None:

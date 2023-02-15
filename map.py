@@ -8,15 +8,17 @@ from camera import Camera
 
 
 class Map:
-    def __init__(self, level: str, tiles_types: dict):
+    def __init__(self, level: str):
         self.level = load_functions.load_level(level)
-        self.tiles_types = tiles_types
 
         self.screen = pygame.display.get_surface()
 
-        self.group_all_sprite = Camera()
-        self.group_visible_sprite = Camera()
-        self.group_obstacles_sprite = Camera()
+        width_map = len(self.level[0]) * SIZE_TILE
+        height_map = len(self.level) * SIZE_TILE
+
+        self.group_all_sprite = Camera(width_map, height_map)
+        self.group_visible_sprite = Camera(width_map, height_map)
+        self.group_obstacles_sprite = Camera(width_map, height_map)
 
         self.array_tile = self._create_array_tile(self.level)
 
@@ -27,7 +29,6 @@ class Map:
             column_result = []
 
             for x, item in enumerate(column):
-
                 if item == "#":
                     Tree((x * SIZE_TILE, y * SIZE_TILE), self.group_all_sprite, self.group_obstacles_sprite)
                 elif item == "p":
