@@ -4,6 +4,7 @@ import load_functions
 from game_object import Tree
 from settings import SIZE_TILE
 from player import Player
+from camera import Camera
 
 
 class Map:
@@ -13,9 +14,9 @@ class Map:
 
         self.screen = pygame.display.get_surface()
 
-        self.group_all_sprite = pygame.sprite.Group()
-        self.group_visible_sprite = pygame.sprite.Group()
-        self.group_obstacles_sprite = pygame.sprite.Group()
+        self.group_all_sprite = Camera()
+        self.group_visible_sprite = Camera()
+        self.group_obstacles_sprite = Camera()
 
         self.array_tile = self._create_array_tile(self.level)
 
@@ -30,8 +31,9 @@ class Map:
                 if item == "#":
                     Tree((x * SIZE_TILE, y * SIZE_TILE), self.group_all_sprite, self.group_obstacles_sprite)
                 elif item == "p":
-                    Player((x * SIZE_TILE, y * SIZE_TILE), load_functions.load_image("player", "starver.png"),
-                           self.group_obstacles_sprite, self.group_all_sprite)
+                    self.player = Player((x * SIZE_TILE, y * SIZE_TILE),
+                                         load_functions.load_image("player", "starver.png"),
+                                         self.group_obstacles_sprite, self.group_all_sprite)
 
             result.append(column_result)
 
@@ -39,6 +41,4 @@ class Map:
 
     def run(self) -> None:
         self.group_all_sprite.update()
-        self.screen.fill((1, 50, 32))
-        for sprite in sorted(self.group_all_sprite):
-            self.screen.blit(sprite.image, sprite.rect)
+        self.group_all_sprite.custom_draw(self.player)
