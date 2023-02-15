@@ -1,0 +1,2 @@
+HORIZONTAL = "horizontal"
+VERTICAL = "vertical"
