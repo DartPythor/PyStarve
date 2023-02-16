@@ -1,5 +1,13 @@
 import pygame
+import math
 import os
+
+
+def rotate(array_pos1: tuple, array_pos2: tuple) -> int:
+    mouse_x, mouse_y = array_pos1
+    rel_x, rel_y = mouse_x - array_pos2[0], mouse_y - array_pos2[1]
+    angle = (180 / math.pi) * -math.atan2(rel_y, rel_x)
+    return int(angle)
 
 
 def load_level(filename) -> list:

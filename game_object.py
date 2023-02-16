@@ -1,3 +1,5 @@
+import random
+
 import pygame
 
 import load_functions
@@ -13,6 +15,8 @@ class GameObject(pygame.sprite.Sprite):
         self.rect.x = pos[0]
         self.rect.y = pos[1]
 
+        self.hitbox = self.rect.inflate(0, -50)
+
         self.main_score = 100
 
     def __lt__(self, other):
@@ -25,3 +29,4 @@ class GameObject(pygame.sprite.Sprite):
 class Tree(GameObject):
     def __init__(self, pos: tuple, *group):
         super().__init__(pos, load_functions.load_image("tree", "tree1.png"), *group)
+        self.main_score += random.randint(1, 2)
