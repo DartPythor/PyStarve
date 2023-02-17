@@ -15,7 +15,7 @@ class GameObject(pygame.sprite.Sprite):
         self.rect.x = pos[0]
         self.rect.y = pos[1]
 
-        self.hitbox = self.rect.inflate(0, -50)
+        self.hitbox = self.rect.inflate(-20, -20)
 
         self.main_score = 100
 

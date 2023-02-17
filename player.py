@@ -3,7 +3,7 @@ import math
 import pygame
 
 import load_functions
-from constants import VERTICAL, HORIZONTAL
+from constants import VERTICAL, HORIZONTAL, ATTACK, MOVE, STAND
 
 
 class Player(pygame.sprite.Sprite):
@@ -14,15 +14,18 @@ class Player(pygame.sprite.Sprite):
         self.rect.x = pos[0]
         self.rect.y = pos[1]
         self.origin_image = image
-        self.oofset = pygame.math.Vector2()
+        self.offset = pygame.math.Vector2()
 
         self.direction = pygame.math.Vector2()
         self.speed = 5
 
+        self.status = "stating"
+
         self.obstacles_sprites = obstacles_sprites
         self.camera = groups[0]
 
-        self.hitbox = self.rect.inflate(0, -25)
+        self.hitbox = self.rect.inflate(-30, -30)
+        # (196, 216)
         self.main_score = 1000
 
     def __lt__(self, other):
@@ -79,7 +82,26 @@ class Player(pygame.sprite.Sprite):
                     if self.direction.y < 0:
                         self.hitbox.top = sprite.hitbox.bottom
 
+    def set_status(self):
+        actives = []
+        if pygame.mouse.get_pressed()[0]:
+            actives.append(ATTACK)
+
+        if self.direction.x == 0 and self.direction.y == 0:
+            actives.append(STAND)
+        else:
+            actives.append(MOVE)
+
+        self.status = "_".join(actives)
+
+    def attack(self):
+        ...
+
+    def animation_hands(self):
+        ...
+
     def update(self) -> None:
         self.animation_player_see()
         self.set_direction()
+        self.set_status()
         self.move(self.speed)
