@@ -28,6 +28,9 @@ class Player(pygame.sprite.Sprite):
         # (196, 216)
         self.main_score = 1000
 
+        self.right_hand = PlayerHand(self, 1, load_functions.load_image("hands", "starver_hand.png"), *groups)
+        self.left_hand = PlayerHand(self, 0, load_functions.load_image("hands", "starver_hand.png"), *groups)
+
     def __lt__(self, other):
         return self.main_score < other.main_score
 
@@ -35,6 +38,8 @@ class Player(pygame.sprite.Sprite):
         offset_pos = self.rect.center - self.camera.offset
         angel = load_functions.rotate(pygame.mouse.get_pos(), (offset_pos.x, offset_pos.y)) + 90
         last_x, last_y = self.rect.centerx, self.rect.centery
+        self.right_hand.set_position(self.camera.offset)
+        self.left_hand.set_position(self.camera.offset)
         self.image = pygame.transform.rotate(self.origin_image, angel)
         self.rect = self.image.get_rect(center=(last_x, last_y))
 
@@ -105,3 +110,45 @@ class Player(pygame.sprite.Sprite):
         self.set_direction()
         self.set_status()
         self.move(self.speed)
+
+
+class PlayerHand(pygame.sprite.Sprite):
+    def __init__(self, player: Player, type_hand: int, image: pygame.Surface, *groups):
+        super().__init__(*groups)
+
+        self.player = player
+        self.image = image
+        self.rect = self.image.get_rect()
+
+        self.main_score = player.main_score
+
+        self.x, self.y = self.player.rect.center
+        self.distance = 70
+        if type_hand:
+            self.rect.center = (self.x + self.distance, self.y)
+        else:
+            self.rect.center = (self.x - self.distance, self.y)
+        self.type_hand = type_hand
+
+    def __lt__(self, other):
+        return self.main_score < other.main_score
+
+    def set_position(self, offset):
+        m_x, m_y = pygame.mouse.get_pos()[0] + offset.x, pygame.mouse.get_pos()[1] + offset.y
+        p_x, p_y = self.player.rect.center
+
+        if self.type_hand:
+            k = math.radians(90)
+        else:
+            k = -math.radians(90)
+
+        a = math.atan2((p_y - m_y), (p_x - m_x)) + k
+
+        self.rect.centerx = int(p_x + self.distance * math.cos(a))
+        self.rect.centery = int(p_y + self.distance * math.sin(a))
+
+    def animation_attack(self):
+        ...
+
+    def update(self) -> None:
+        ...
