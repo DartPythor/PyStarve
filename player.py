@@ -28,8 +28,12 @@ class Player(pygame.sprite.Sprite):
         # (196, 216)
         self.main_score = 1000
 
-        self.right_hand = PlayerHand(self, 1, load_functions.load_image("hands", "starver_hand.png"), *groups)
-        self.left_hand = PlayerHand(self, 0, load_functions.load_image("hands", "starver_hand.png"), *groups)
+        self.right_hand = PlayerHand(self, 0, load_functions.load_image("hands", "starver_hand.png"), *groups)
+        self.left_hand = PlayerHand(self, 1, load_functions.load_image("hands", "starver_hand.png"), *groups)
+
+        self.attacking = False
+        self.attack_cooldown = 500
+        self.attack_time = None
 
     def __lt__(self, other):
         return self.main_score < other.main_score
@@ -39,6 +43,8 @@ class Player(pygame.sprite.Sprite):
         angel = load_functions.rotate(pygame.mouse.get_pos(), (offset_pos.x, offset_pos.y)) + 90
         last_x, last_y = self.rect.centerx, self.rect.centery
         self.right_hand.set_position(self.camera.offset)
+        if self.attacking:
+            self.right_hand.attack()
         self.left_hand.set_position(self.camera.offset)
         self.image = pygame.transform.rotate(self.origin_image, angel)
         self.rect = self.image.get_rect(center=(last_x, last_y))
@@ -59,6 +65,10 @@ class Player(pygame.sprite.Sprite):
             self.direction.x = 1
         else:
             self.direction.x = 0
+
+        if pygame.mouse.get_pressed()[0] and not self.attacking:
+            self.attack_time = pygame.time.get_ticks()
+            self.attacking = True
 
     def move(self, speed: int):
         if self.direction.magnitude() != 0:
@@ -99,16 +109,17 @@ class Player(pygame.sprite.Sprite):
 
         self.status = "_".join(actives)
 
-    def attack(self):
-        ...
-
-    def animation_hands(self):
-        ...
+    def cooldowns(self):
+        current_time = pygame.time.get_ticks()
+        if self.attacking:
+            if current_time - self.attack_time >= self.attack_cooldown:
+                self.attacking = False
 
     def update(self) -> None:
         self.animation_player_see()
         self.set_direction()
         self.set_status()
+        self.cooldowns()
         self.move(self.speed)
 
 
@@ -147,8 +158,21 @@ class PlayerHand(pygame.sprite.Sprite):
         self.rect.centerx = int(p_x + self.distance * math.cos(a))
         self.rect.centery = int(p_y + self.distance * math.sin(a))
 
+    def attack(self):
+        self.animation_attack()
+
     def animation_attack(self):
-        ...
+        p_x, p_y = self.player.rect.center
+
+        if self.type_hand:
+            k = math.radians(162)
+        else:
+            k = -math.radians(162)
+
+        for i in range(1, 4):
+            a = math.atan2((p_y - self.rect.centery), (p_x - self.rect.centerx)) - k
+            self.rect.centerx = int(p_x + self.distance * math.cos(a))
+            self.rect.centery = int(p_y + self.distance * math.sin(a))
 
     def update(self) -> None:
         ...
