@@ -35,8 +35,18 @@ class Player(pygame.sprite.Sprite):
         self.attack_cooldown = 500
         self.attack_time = None
 
+        self.get_point_cooldown = False
+
     def __lt__(self, other):
         return self.main_score < other.main_score
+
+    def get_sprite(self, point):
+        for sprite in self.obstacles_sprites:
+            if sprite.rect.collidepoint(point):
+                return sprite
+
+    def sprite_active(self, sprite):
+        sprite.player_active(self)
 
     def animation_player_see(self):
         offset_pos = self.rect.center - self.camera.offset
@@ -44,7 +54,11 @@ class Player(pygame.sprite.Sprite):
         last_x, last_y = self.rect.centerx, self.rect.centery
         self.right_hand.set_position(self.camera.offset)
         if self.attacking:
-            self.right_hand.attack()
+            point_active = self.right_hand.attack(self.camera.offset)
+            if self.get_point_cooldown:
+                sprite = self.get_sprite(point_active)
+                if sprite is not None: self.sprite_active(sprite)
+
         self.left_hand.set_position(self.camera.offset)
         self.image = pygame.transform.rotate(self.origin_image, angel)
         self.rect = self.image.get_rect(center=(last_x, last_y))
@@ -69,6 +83,7 @@ class Player(pygame.sprite.Sprite):
         if pygame.mouse.get_pressed()[0] and not self.attacking:
             self.attack_time = pygame.time.get_ticks()
             self.attacking = True
+            self.get_point_cooldown = True
 
     def move(self, speed: int):
         if self.direction.magnitude() != 0:
@@ -114,6 +129,9 @@ class Player(pygame.sprite.Sprite):
         if self.attacking:
             if current_time - self.attack_time >= self.attack_cooldown:
                 self.attacking = False
+        if self.get_point_cooldown:
+            if current_time - self.attack_time >= 1:
+                self.get_point_cooldown = False
 
     def update(self) -> None:
         self.animation_player_see()
@@ -135,6 +153,7 @@ class PlayerHand(pygame.sprite.Sprite):
 
         self.x, self.y = self.player.rect.center
         self.distance = 70
+        self.distance_active = 50
         if type_hand:
             self.rect.center = (self.x + self.distance, self.y)
         else:
@@ -158,8 +177,16 @@ class PlayerHand(pygame.sprite.Sprite):
         self.rect.centerx = int(p_x + self.distance * math.cos(a))
         self.rect.centery = int(p_y + self.distance * math.sin(a))
 
-    def attack(self):
+    def attack(self, offset) -> tuple:
         self.animation_attack()
+        m_x, m_y = pygame.mouse.get_pos()[0] + offset.x, pygame.mouse.get_pos()[1] + offset.y
+        p_x, p_y = self.player.rect.center
+        if self.type_hand:
+            k = math.radians(180)
+        else:
+            k = -math.radians(180)
+        a = math.atan2((p_y - m_y), (p_x - m_x)) + k
+        return int(p_x + self.distance_active * math.cos(a)), int(p_y + self.distance_active * math.sin(a))
 
     def animation_attack(self):
         p_x, p_y = self.player.rect.center

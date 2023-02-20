@@ -3,6 +3,7 @@ import random
 import pygame
 
 import load_functions
+from player import Player
 
 
 class GameObject(pygame.sprite.Sprite):
@@ -22,11 +23,5 @@ class GameObject(pygame.sprite.Sprite):
     def __lt__(self, other):
         return self.main_score < other.main_score
 
-    def player_active(self):
+    def player_active(self, player: Player):
         ...
-
-
-class Tree(GameObject):
-    def __init__(self, pos: tuple, *group):
-        super().__init__(pos, load_functions.load_image("tree", "tree1.png"), *group)
-        self.main_score += random.randint(1, 2)

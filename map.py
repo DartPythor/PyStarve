@@ -1,10 +1,12 @@
 import pygame
 
 import load_functions
-from game_object import Tree
 from settings import SIZE_TILE
 from player import Player
 from camera import Camera
+
+from game_objects.tree import Tree
+from game_objects.stone import Stone
 
 
 class Map:
@@ -35,6 +37,8 @@ class Map:
                     self.player = Player((x * SIZE_TILE, y * SIZE_TILE),
                                          load_functions.load_image("player", "starver.png"),
                                          self.group_obstacles_sprite, self.group_all_sprite)
+                elif item == "S":
+                    Stone((x * SIZE_TILE, y * SIZE_TILE), self.group_all_sprite, self.group_obstacles_sprite)
 
             result.append(column_result)
 
