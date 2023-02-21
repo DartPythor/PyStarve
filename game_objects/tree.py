@@ -12,3 +12,4 @@ class Tree(GameObject):
 
     def player_active(self, player: Player):
         print("TREE!!!")
+        super().player_active(player)
