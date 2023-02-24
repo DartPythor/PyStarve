@@ -3,7 +3,7 @@ import math
 import pygame
 
 import load_functions
-from constants import VERTICAL, HORIZONTAL, ATTACK, MOVE, STAND
+from constants import *
 
 
 class Player(pygame.sprite.Sprite):
@@ -17,7 +17,6 @@ class Player(pygame.sprite.Sprite):
         self.offset = pygame.math.Vector2()
 
         self.direction = pygame.math.Vector2()
-        self.speed = 5
 
         self.status = "stating"
 
@@ -25,7 +24,7 @@ class Player(pygame.sprite.Sprite):
         self.camera = groups[0]
 
         self.hitbox = self.rect.inflate(-30, -30)
-        # (196, 216)
+
         self.main_score = 1000
 
         self.right_hand = PlayerHand(self, 0, load_functions.load_image("hands", "starver_hand.png"), *groups)
@@ -36,6 +35,14 @@ class Player(pygame.sprite.Sprite):
         self.attack_time = None
 
         self.get_point_cooldown = False
+
+        self.stats = {HEALTH: 100, DAMAGE: 10, SPEED: 5, WATER: 100, HUNGRY: 100, TEMPERATURE: 100}
+        self.health = self.stats[HEALTH]
+        self.damage = self.stats[DAMAGE]
+        self.speed = self.stats[SPEED]
+        self.water = self.stats[WATER]
+        self.hungry = self.stats[HUNGRY]
+        self.temperature = self.stats[TEMPERATURE]
 
     def __lt__(self, other):
         return self.main_score < other.main_score

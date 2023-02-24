@@ -10,8 +10,9 @@ from game_objects.stone import Stone
 
 
 class Map:
-    def __init__(self, level: str):
+    def __init__(self, level: str, ui):
         self.level = load_functions.load_level(level)
+        self.ui = ui
 
         self.screen = pygame.display.get_surface()
 
@@ -21,15 +22,10 @@ class Map:
         self.group_all_sprite = Camera(width_map, height_map)
         self.group_visible_sprite = Camera(width_map, height_map)
         self.group_obstacles_sprite = Camera(width_map, height_map)
+        self._create_array_tile(self.level)
 
-        self.array_tile = self._create_array_tile(self.level)
-
-    def _create_array_tile(self, level: list) -> list:
-        result = []
-
+    def _create_array_tile(self, level: list) -> None:
         for y, column in enumerate(level):
-            column_result = []
-
             for x, item in enumerate(column):
                 if item == "#":
                     Tree((x * SIZE_TILE, y * SIZE_TILE), self.group_all_sprite, self.group_obstacles_sprite)
@@ -40,10 +36,7 @@ class Map:
                 elif item == "S":
                     Stone((x * SIZE_TILE, y * SIZE_TILE), self.group_all_sprite, self.group_obstacles_sprite)
 
-            result.append(column_result)
-
-        return result
-
     def run(self) -> None:
         self.group_all_sprite.update()
         self.group_all_sprite.custom_draw(self.player)
+        self.ui.display(self.player)

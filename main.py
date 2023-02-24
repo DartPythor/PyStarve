@@ -17,9 +17,9 @@ class Game:
         self.width, self.height = pygame.display.get_window_size()
         self.clock = pygame.time.Clock()
         pygame.display.set_caption(title)
-
+        self.stats_bar_group = pygame.sprite.Group()
         self.ui_game = UiGame()
-        self.map = Map("big_map.txt")
+        self.map = Map("big_map.txt", self.ui_game)
 
     @staticmethod
     def terminate() -> None:
