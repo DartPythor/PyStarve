@@ -1,6 +1,7 @@
 import pygame
 from settings import *
 from constants import *
+from load_functions import load_image
 
 
 class UiGame:
@@ -15,21 +16,26 @@ class UiGame:
         self.temperature_bar_rect = pygame.Rect(size_set * 3, y_delta, BAR_WIDTH, BAR_HEIGHT)
         self.water_bar_rect = pygame.Rect(size_set * 4, y_delta, BAR_WIDTH, BAR_HEIGHT)
 
-    def _show_bar(self, current, max_amount, bg_rect, color):
+        self.hp_image = load_image("stats", "hp.png")
+        self.hungry_image = load_image("stats", "hungry.png")
+        self.temperature_image = load_image("stats", "temperature.png")
+        self.water_image = load_image("stats", "water.png")
+
+    def _show_bar(self, current, max_amount, bg_rect, color, image):
         pygame.draw.rect(self.display_surface, color, bg_rect, 1, border_radius=15)
 
         ratio = current / max_amount
         current_width = bg_rect.width * ratio
         current_rect = bg_rect.copy()
         current_rect.width = current_width
-
         pygame.draw.rect(self.display_surface, color, current_rect, border_radius=15)
+        self.display_surface.blit(image, (bg_rect.topleft[0] - 4, bg_rect.topleft[1] - 4))
 
     def display(self, player):
-        self._show_bar(player.health, player.stats[HEALTH], self.health_bar_rect, HEALTH_COLOR)
-        self._show_bar(player.hungry, player.stats[HUNGRY], self.hungry_bar_rect, HUNGRY_COLOR)
-        self._show_bar(player.temperature, player.stats[TEMPERATURE], self.temperature_bar_rect, TEMPERATURE_COLOR)
-        self._show_bar(player.water, player.stats[WATER], self.water_bar_rect, WATER_COLOR)
+        self._show_bar(player.health, player.stats[HEALTH], self.health_bar_rect, HEALTH_COLOR, self.hp_image)
+        self._show_bar(player.hungry, player.stats[HUNGRY], self.hungry_bar_rect, HUNGRY_COLOR, self.hungry_image)
+        self._show_bar(player.temperature, player.stats[TEMPERATURE], self.temperature_bar_rect, TEMPERATURE_COLOR, self.temperature_image)
+        self._show_bar(player.water, player.stats[WATER], self.water_bar_rect, WATER_COLOR, self.water_image)
 
     def start_game(self) -> bool:
         print("start game")
