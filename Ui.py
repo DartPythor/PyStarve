@@ -31,11 +31,21 @@ class UiGame:
         pygame.draw.rect(self.display_surface, color, current_rect, border_radius=15)
         self.display_surface.blit(image, (bg_rect.topleft[0] - 4, bg_rect.topleft[1] - 4))
 
+    def _selection_box(self, left, top):
+        bg_rect = pygame.Surface((ITEM_BOX_SIZE, ITEM_BOX_SIZE))
+        bg_rect.set_alpha(128)
+        bg_rect.fill((30, 71, 55))
+        self.display_surface.blit(bg_rect, (left, top))
+
     def display(self, player):
         self._show_bar(player.health, player.stats[HEALTH], self.health_bar_rect, HEALTH_COLOR, self.hp_image)
         self._show_bar(player.hungry, player.stats[HUNGRY], self.hungry_bar_rect, HUNGRY_COLOR, self.hungry_image)
         self._show_bar(player.temperature, player.stats[TEMPERATURE], self.temperature_bar_rect, TEMPERATURE_COLOR, self.temperature_image)
         self._show_bar(player.water, player.stats[WATER], self.water_bar_rect, WATER_COLOR, self.water_image)
+
+        y = self.display_surface.get_size()[1]
+        for i in range(10):
+            self._selection_box((ITEM_BOX_SIZE * 10 + 5 * 9) // 2 + 100 * i, y - 90)
 
     def start_game(self) -> bool:
         print("start game")
