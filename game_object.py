@@ -1,8 +1,4 @@
-import random
-
 import pygame
-
-import load_functions
 from player import Player
 
 

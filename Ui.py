@@ -43,9 +43,10 @@ class UiGame:
         self._show_bar(player.temperature, player.stats[TEMPERATURE], self.temperature_bar_rect, TEMPERATURE_COLOR, self.temperature_image)
         self._show_bar(player.water, player.stats[WATER], self.water_bar_rect, WATER_COLOR, self.water_image)
 
-        y = self.display_surface.get_size()[1]
-        for i in range(10):
-            self._selection_box((ITEM_BOX_SIZE * 10 + 5 * 9) // 2 + 100 * i, y - 90)
+        x, y = self.display_surface.get_size()
+        k = 10
+        for i in range(k):
+            self._selection_box((x - (ITEM_BOX_SIZE * k + 10 * k)) // 2 + 90 * i, y - 90)
 
     def start_game(self) -> bool:
         print("start game")
