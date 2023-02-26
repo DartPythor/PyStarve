@@ -7,6 +7,8 @@ from load_functions import load_image
 class UiGame:
     def __init__(self):
         self.display_surface = pygame.display.get_surface()
+        self.font = pygame.font.SysFont(UI_FONT, UI_FONT_SIZE)
+
         x, y = self.display_surface.get_size()
 
         size_set = x // 5 - 40
@@ -31,11 +33,16 @@ class UiGame:
         pygame.draw.rect(self.display_surface, color, current_rect, border_radius=15)
         self.display_surface.blit(image, (bg_rect.topleft[0] - 4, bg_rect.topleft[1] - 4))
 
-    def _selection_box(self, left, top):
+    def _selection_box(self, left, top, inv_slot):
         bg_rect = pygame.Surface((ITEM_BOX_SIZE, ITEM_BOX_SIZE))
         bg_rect.set_alpha(128)
         bg_rect.fill((30, 71, 55))
+
         self.display_surface.blit(bg_rect, (left, top))
+        if inv_slot is not None:
+            text_surf = self.font.render("x" + str(inv_slot.count), False, TEXT_COLOR)
+            self.display_surface.blit(inv_slot.item.image, (left, top))
+            self.display_surface.blit(text_surf, (left + 50, top + 60))
 
     def display(self, player):
         self._show_bar(player.health, player.stats[HEALTH], self.health_bar_rect, HEALTH_COLOR, self.hp_image)
@@ -44,9 +51,13 @@ class UiGame:
         self._show_bar(player.water, player.stats[WATER], self.water_bar_rect, WATER_COLOR, self.water_image)
 
         x, y = self.display_surface.get_size()
-        k = 10
-        for i in range(k):
-            self._selection_box((x - (ITEM_BOX_SIZE * k + 10 * k)) // 2 + 90 * i, y - 90)
+        count_items = player.inventory.count_slots
+        for i in range(count_items):
+            slot = player.inventory.inventory[i + 1]
+            left, top = (x - (ITEM_BOX_SIZE * count_items + 10 * count_items)) // 2 + 90 * i, y - 90
+            self._selection_box(left, top, slot)
+            text_surf = self.font.render(str(i + 1), False, TEXT_COLOR)
+            self.display_surface.blit(text_surf, (left, top))
 
     def start_game(self) -> bool:
         print("start game")

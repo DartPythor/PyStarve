@@ -1,9 +1,10 @@
 import math
-
 import pygame
 
 import load_functions
 from constants import *
+from inventory import Inventory, InventorySlot
+from game_items.berries import Berries
 
 
 class Player(pygame.sprite.Sprite):
@@ -43,6 +44,8 @@ class Player(pygame.sprite.Sprite):
         self.water = self.stats[WATER]
         self.hungry = self.stats[HUNGRY]
         self.temperature = self.stats[TEMPERATURE]
+        self.inventory = Inventory(self)
+        self.inventory.get_new_item(InventorySlot(10, 1, Berries()))
 
     def __lt__(self, other):
         return self.main_score < other.main_score
