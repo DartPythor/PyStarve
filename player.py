@@ -46,6 +46,7 @@ class Player(pygame.sprite.Sprite):
         self.inventory = Inventory(self)
         self.inventory_use = False
         self.last_use_inv = None
+        self.live = True
 
     def __lt__(self, other):
         return self.main_score < other.main_score
@@ -99,12 +100,12 @@ class Player(pygame.sprite.Sprite):
 
     def set_inventory(self):
         keys = pygame.key.get_pressed()
-        for i in (pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5, pygame.K_6, pygame.K_7, pygame.K_8, pygame.K_9):
+        for i in (
+        pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5, pygame.K_6, pygame.K_7, pygame.K_8, pygame.K_9):
             if keys[i] is True:
                 self.inventory_use = True
                 self.last_use_inv = pygame.time.get_ticks()
                 self.inventory.use_item(i - 48)
-
 
     def move(self, speed: int):
         if self.direction.magnitude() != 0:
@@ -163,6 +164,14 @@ class Player(pygame.sprite.Sprite):
         self.set_status()
         self.cooldowns()
         self.move(self.speed)
+        self.check_live()
+
+    def hungry_time(self):
+        self.hungry -= 10
+
+    def check_live(self):
+        if self.hungry <= 0:
+            self.live = False
 
 
 class PlayerHand(pygame.sprite.Sprite):

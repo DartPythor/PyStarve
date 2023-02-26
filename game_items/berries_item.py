@@ -10,4 +10,5 @@ class BerriesItem(Item):
 
     def player_active(self, player):
         print("BERRIES USE!")
+        player.hungry += 5
         return 1

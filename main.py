@@ -20,11 +20,16 @@ class Game:
         self.stats_bar_group = pygame.sprite.Group()
         self.ui_game = UiGame()
         self.map = Map("big_map.txt", self.ui_game)
+        self.start_events()
 
     @staticmethod
     def terminate() -> None:
         pygame.quit()
         sys.exit()
+
+    def start_events(self):
+        self.HUNGRY = pygame.USEREVENT + 1
+        pygame.time.set_timer(self.HUNGRY, 5 * 1000)
 
     def run(self) -> None:
         running = self.ui_game.start_game()
@@ -33,9 +38,14 @@ class Game:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
+                if event.type == self.HUNGRY:
+                    self.map.player.hungry_time()
+
             self.map.run()
             self.clock.tick(FPS)
             pygame.display.update()
+            if self.map.player.live is False:
+                running = False
         else:
             self.ui_game.end_game()
 
