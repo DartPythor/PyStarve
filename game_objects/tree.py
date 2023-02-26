@@ -2,6 +2,7 @@ import load_functions
 import random
 from game_object import GameObject
 from player import Player
+from game_items.wood_item import WoodItem
 
 
 class Tree(GameObject):
@@ -11,5 +12,5 @@ class Tree(GameObject):
         self.hitbox = self.rect.inflate(-38, -38)
 
     def player_active(self, player: Player):
-        print("TREE!!!")
+        player.inventory.get_new_item(WoodItem(), 1)
         super().player_active(player)

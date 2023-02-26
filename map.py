@@ -7,6 +7,7 @@ from camera import Camera
 
 from game_objects.tree import Tree
 from game_objects.stone import Stone
+from game_objects.berries import Berries
 
 
 class Map:
@@ -35,6 +36,8 @@ class Map:
                                          self.group_obstacles_sprite, self.group_all_sprite)
                 elif item == "S":
                     Stone((x * SIZE_TILE, y * SIZE_TILE), self.group_all_sprite, self.group_obstacles_sprite)
+                elif item == "B":
+                    Berries((x * SIZE_TILE, y * SIZE_TILE), self.group_all_sprite, self.group_obstacles_sprite)
 
     def run(self) -> None:
         self.group_all_sprite.update()

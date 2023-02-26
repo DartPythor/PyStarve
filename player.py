@@ -3,8 +3,7 @@ import pygame
 
 import load_functions
 from constants import *
-from inventory import Inventory, InventorySlot
-from game_items.berries import Berries
+from inventory import Inventory
 
 
 class Player(pygame.sprite.Sprite):
@@ -45,7 +44,8 @@ class Player(pygame.sprite.Sprite):
         self.hungry = self.stats[HUNGRY]
         self.temperature = self.stats[TEMPERATURE]
         self.inventory = Inventory(self)
-        self.inventory.get_new_item(InventorySlot(10, 1, Berries()))
+        self.inventory_use = False
+        self.last_use_inv = None
 
     def __lt__(self, other):
         return self.main_score < other.main_score
@@ -94,6 +94,17 @@ class Player(pygame.sprite.Sprite):
             self.attack_time = pygame.time.get_ticks()
             self.attacking = True
             self.get_point_cooldown = True
+        if self.inventory_use is False:
+            self.set_inventory()
+
+    def set_inventory(self):
+        keys = pygame.key.get_pressed()
+        for i in (pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5, pygame.K_6, pygame.K_7, pygame.K_8, pygame.K_9):
+            if keys[i] is True:
+                self.inventory_use = True
+                self.last_use_inv = pygame.time.get_ticks()
+                self.inventory.use_item(i - 48)
+
 
     def move(self, speed: int):
         if self.direction.magnitude() != 0:
@@ -142,6 +153,9 @@ class Player(pygame.sprite.Sprite):
         if self.get_point_cooldown:
             if current_time - self.attack_time >= 1:
                 self.get_point_cooldown = False
+        if self.inventory_use:
+            if current_time - self.last_use_inv >= 900:
+                self.inventory_use = False
 
     def update(self) -> None:
         self.animation_player_see()
