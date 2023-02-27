@@ -32,6 +32,8 @@ class Game:
         pygame.time.set_timer(self.HUNGRY, 5 * 1000)
         self.HEALTH = pygame.USEREVENT + 2
         pygame.time.set_timer(self.HEALTH, 5 * 1000)
+        self.WATER = pygame.USEREVENT + 3
+        pygame.time.set_timer(self.WATER, 8 * 1000)
 
     def run(self) -> None:
         running = self.ui_game.start_game()
@@ -44,6 +46,8 @@ class Game:
                     self.map.player.hungry_time()
                 if event.type == self.HEALTH:
                     self.map.player.check_health()
+                if event.type == self.WATER:
+                    self.map.player.water_time()
 
             self.map.run()
             self.clock.tick(FPS)

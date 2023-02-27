@@ -8,6 +8,7 @@ from camera import Camera
 from game_objects.tree import Tree
 from game_objects.stone import Stone
 from game_objects.berries import Berries
+from game_objects.river import River
 
 
 class Map:
@@ -23,6 +24,7 @@ class Map:
         self.group_all_sprite = Camera(width_map, height_map)
         self.group_visible_sprite = Camera(width_map, height_map)
         self.group_obstacles_sprite = Camera(width_map, height_map)
+        self.river_sprite_group = pygame.sprite.Group()
         self._create_array_tile(self.level)
 
     def _create_array_tile(self, level: list) -> None:
@@ -38,6 +40,8 @@ class Map:
                     Stone((x * SIZE_TILE, y * SIZE_TILE), self.group_all_sprite, self.group_obstacles_sprite)
                 elif item == "B":
                     Berries((x * SIZE_TILE, y * SIZE_TILE), self.group_all_sprite, self.group_obstacles_sprite)
+                elif item in "1234567":
+                    River((x * SIZE_TILE, y * SIZE_TILE), f"river{item}.png", self.group_all_sprite, self.river_sprite_group)
 
     def run(self) -> None:
         self.group_all_sprite.update()

@@ -41,7 +41,7 @@ class Player(pygame.sprite.Sprite):
         self.damage = self.stats[DAMAGE]
         self.speed = self.stats[SPEED]
         self.water = self.stats[WATER]
-        self.hungry = self.stats[HUNGRY] - 80
+        self.hungry = self.stats[HUNGRY]
         self.temperature = self.stats[TEMPERATURE]
         self.inventory = Inventory(self)
         self.inventory_use = False
@@ -169,6 +169,10 @@ class Player(pygame.sprite.Sprite):
     def hungry_time(self):
         if self.hungry > 0:
             self.hungry -= 10
+
+    def water_time(self):
+        if self.water > 0:
+            self.water -= 10
 
     def check_health(self):
         if all((self.hungry > 0, self.water > 0, self.temperature > 0)) is False:
