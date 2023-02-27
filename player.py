@@ -41,7 +41,7 @@ class Player(pygame.sprite.Sprite):
         self.damage = self.stats[DAMAGE]
         self.speed = self.stats[SPEED]
         self.water = self.stats[WATER]
-        self.hungry = self.stats[HUNGRY]
+        self.hungry = self.stats[HUNGRY] - 80
         self.temperature = self.stats[TEMPERATURE]
         self.inventory = Inventory(self)
         self.inventory_use = False
@@ -155,7 +155,7 @@ class Player(pygame.sprite.Sprite):
             if current_time - self.attack_time >= 1:
                 self.get_point_cooldown = False
         if self.inventory_use:
-            if current_time - self.last_use_inv >= 900:
+            if current_time - self.last_use_inv >= 200:
                 self.inventory_use = False
 
     def update(self) -> None:
@@ -167,11 +167,28 @@ class Player(pygame.sprite.Sprite):
         self.check_live()
 
     def hungry_time(self):
-        self.hungry -= 10
+        if self.hungry > 0:
+            self.hungry -= 10
+
+    def check_health(self):
+        if all((self.hungry > 0, self.water > 0, self.temperature > 0)) is False:
+            self.health -= 10
+
+        elif self.health + 10 > 100:
+            self.health = 100
+
+        elif self.health < 100:
+            self.health += 10
 
     def check_live(self):
-        if self.hungry <= 0:
+        if self.health <= 0:
             self.live = False
+
+    def eat(self, count):
+        if self.hungry + count > 100:
+            self.hungry = 100
+        if self.hungry < 100:
+            self.hungry += count
 
 
 class PlayerHand(pygame.sprite.Sprite):
