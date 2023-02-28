@@ -19,7 +19,7 @@ class Game:
         pygame.display.set_caption(title)
         self.stats_bar_group = pygame.sprite.Group()
         self.ui_game = UiGame()
-        self.map = Map("big_map.txt", self.ui_game)
+        self.map = Map("game_map.txt", self.ui_game)
         self.start_events()
 
     @staticmethod
