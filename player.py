@@ -7,7 +7,8 @@ from inventory import Inventory
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos: tuple, image: pygame.Surface, obstacles_sprites: pygame.sprite.Group, *groups):
+    def __init__(self, pos: tuple, image: pygame.Surface, obstacles_sprites: pygame.sprite.Group,
+                 river_group: pygame.sprite.Group, *groups):
         super().__init__(*groups)
         self.image = image
         self.rect = self.image.get_rect()
@@ -21,6 +22,7 @@ class Player(pygame.sprite.Sprite):
         self.status = "stating"
 
         self.obstacles_sprites = obstacles_sprites
+        self.water_group = river_group
         self.camera = groups[0]
 
         self.hitbox = self.rect.inflate(-30, -30)
@@ -91,6 +93,13 @@ class Player(pygame.sprite.Sprite):
         else:
             self.direction.x = 0
 
+        gets_hit = self.get_water_collision()
+
+        if gets_hit is True:
+            self.speed = self.stats[SPEED] // 2
+        else:
+            self.speed = self.stats[SPEED]
+
         if pygame.mouse.get_pressed()[0] and not self.attacking:
             self.attack_time = pygame.time.get_ticks()
             self.attacking = True
@@ -101,7 +110,8 @@ class Player(pygame.sprite.Sprite):
     def set_inventory(self):
         keys = pygame.key.get_pressed()
         for i in (
-        pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5, pygame.K_6, pygame.K_7, pygame.K_8, pygame.K_9):
+                pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5, pygame.K_6, pygame.K_7, pygame.K_8,
+                pygame.K_9):
             if keys[i] is True:
                 self.inventory_use = True
                 self.last_use_inv = pygame.time.get_ticks()
@@ -133,6 +143,12 @@ class Player(pygame.sprite.Sprite):
                         self.hitbox.bottom = sprite.hitbox.top
                     if self.direction.y < 0:
                         self.hitbox.top = sprite.hitbox.bottom
+
+    def get_water_collision(self):
+        for sprite in self.water_group:
+            if sprite.hitbox.colliderect(self.hitbox):
+                return True
+        return False
 
     def set_status(self):
         actives = []
@@ -171,7 +187,11 @@ class Player(pygame.sprite.Sprite):
             self.hungry -= 10
 
     def water_time(self):
-        if self.water > 0:
+        gets_hit = self.get_water_collision()
+
+        if gets_hit is True and self.water < 100:
+            self.water += 10
+        if self.water > 0 and gets_hit is False:
             self.water -= 10
 
     def check_health(self):

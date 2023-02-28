@@ -59,5 +59,5 @@ class Game:
 
 
 if __name__ == '__main__':
-    game = Game("PyStarve Alpha 1.1", None)
+    game = Game("PyStarve Alpha 1.1", (1400, 720))
     game.run()

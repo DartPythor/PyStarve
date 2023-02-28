@@ -35,7 +35,7 @@ class Map:
                 elif item == "p":
                     self.player = Player((x * SIZE_TILE, y * SIZE_TILE),
                                          load_functions.load_image("player", "starver.png"),
-                                         self.group_obstacles_sprite, self.group_all_sprite)
+                                         self.group_obstacles_sprite, self.river_sprite_group, self.group_all_sprite)
                 elif item == "S":
                     Stone((x * SIZE_TILE, y * SIZE_TILE), self.group_all_sprite, self.group_obstacles_sprite)
                 elif item == "B":
