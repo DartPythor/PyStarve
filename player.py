@@ -45,6 +45,7 @@ class Player(pygame.sprite.Sprite):
         self.water = self.stats[WATER]
         self.hungry = self.stats[HUNGRY]
         self.temperature = self.stats[TEMPERATURE]
+        self.score = 0
         self.inventory = Inventory(self)
         self.inventory_use = False
         self.last_use_inv = None

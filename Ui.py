@@ -58,6 +58,8 @@ class UiGame:
             self._selection_box(left, top, slot)
             text_surf = self.font.render(str(i + 1), False, TEXT_COLOR)
             self.display_surface.blit(text_surf, (left, top))
+        text_surf = self.font.render(f"Score: {player.score}", False, TEXT_COLOR)
+        self.display_surface.blit(text_surf, (x - 250, y - 50))
 
     def start_game(self) -> bool:
         print("start game")
