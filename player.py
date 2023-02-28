@@ -52,7 +52,6 @@ class Player(pygame.sprite.Sprite):
 
         self.pos_fire = None
 
-
     def __lt__(self, other):
         return self.main_score < other.main_score
 
@@ -201,13 +200,12 @@ class Player(pygame.sprite.Sprite):
         x, y = self.pos_fire.rect.center
         x1, y1 = self.rect.center
         k = math.sqrt((x1 - x) ** 2 + (y1 - y) ** 2)
-        print(k)
         if k <= 140 and self.pos_fire.time_work > 0:
             if self.temperature < 100:
                 self.temperature += 10
         else:
-            self.temperature -= 10
-
+            if self.temperature > 0:
+                self.temperature -= 10
 
     def check_health(self):
         if all((self.hungry > 0, self.water > 0, self.temperature > 0)) is False:
