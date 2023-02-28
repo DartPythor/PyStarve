@@ -9,6 +9,7 @@ from game_objects.tree import Tree
 from game_objects.stone import Stone
 from game_objects.berries import Berries
 from game_objects.river import River
+from game_objects.furnace import Furnace
 
 
 class Map:
@@ -25,6 +26,7 @@ class Map:
         self.group_visible_sprite = Camera(width_map, height_map)
         self.group_obstacles_sprite = Camera(width_map, height_map)
         self.river_sprite_group = pygame.sprite.Group()
+        self.furnace_sprite_group = pygame.sprite.Group()
         self._create_array_tile(self.level)
 
     def _create_array_tile(self, level: list) -> None:
@@ -40,10 +42,13 @@ class Map:
                     Stone((x * SIZE_TILE, y * SIZE_TILE), self.group_all_sprite, self.group_obstacles_sprite)
                 elif item == "B":
                     Berries((x * SIZE_TILE, y * SIZE_TILE), self.group_all_sprite, self.group_obstacles_sprite)
+                elif item == "F":
+                    self.fire = Furnace((x * SIZE_TILE, y * SIZE_TILE), self.group_all_sprite, self.group_obstacles_sprite, self.furnace_sprite_group)
                 elif item in "1234567":
                     River((x * SIZE_TILE, y * SIZE_TILE), f"river{item}.png", self.group_all_sprite, self.river_sprite_group)
+        self.player.pos_fire = self.fire
 
     def run(self) -> None:
-        self.group_all_sprite.update()
         self.group_all_sprite.custom_draw(self.player)
+        self.group_all_sprite.update()
         self.ui.display(self.player)

@@ -34,6 +34,8 @@ class Game:
         pygame.time.set_timer(self.HEALTH, 5 * 1000)
         self.WATER = pygame.USEREVENT + 3
         pygame.time.set_timer(self.WATER, 8 * 1000)
+        self.TEMPERATURE = pygame.USEREVENT + 4
+        pygame.time.set_timer(self.TEMPERATURE, 10 * 1000)
 
     def run(self) -> None:
         running = self.ui_game.start_game()
@@ -48,7 +50,8 @@ class Game:
                     self.map.player.check_health()
                 if event.type == self.WATER:
                     self.map.player.water_time()
-
+                if event.type == self.TEMPERATURE:
+                    self.map.player.temperature_time()
             self.map.run()
             self.clock.tick(FPS)
             pygame.display.update()

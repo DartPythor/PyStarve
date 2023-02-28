@@ -9,5 +9,4 @@ class StoneItem(Item):
         super().__init__(image)
 
     def player_active(self, player):
-        print("STONE USE!")
-        return 0
+        return 1

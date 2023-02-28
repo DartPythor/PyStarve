@@ -9,5 +9,4 @@ class WoodItem(Item):
         super().__init__(image)
 
     def player_active(self, player):
-        print("WOOD USE!")
-        return 0
+        return 1

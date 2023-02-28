@@ -9,6 +9,5 @@ class BerriesItem(Item):
         super().__init__(image)
 
     def player_active(self, player):
-        print("BERRIES USE!")
         player.eat(10)
         return 1
