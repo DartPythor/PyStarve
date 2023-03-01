@@ -20,7 +20,6 @@ class Game:
         self.stats_bar_group = pygame.sprite.Group()
         self.ui_game = UiGame()
         self.map = Map("game_map.txt", self.ui_game)
-        self.start_events()
 
     @staticmethod
     def terminate() -> None:
@@ -41,7 +40,7 @@ class Game:
 
     def run(self) -> None:
         running = self.ui_game.start_game()
-
+        self.start_events()
         while running is True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -63,7 +62,8 @@ class Game:
             if self.map.player.live is False:
                 running = False
         else:
-            self.ui_game.end_game()
+            if self.map.player.live is False:
+                self.ui_game.end_game(self.map.player)
 
 
 if __name__ == '__main__':

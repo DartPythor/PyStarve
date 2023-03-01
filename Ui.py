@@ -47,7 +47,8 @@ class UiGame:
     def display(self, player):
         self._show_bar(player.health, player.stats[HEALTH], self.health_bar_rect, HEALTH_COLOR, self.hp_image)
         self._show_bar(player.hungry, player.stats[HUNGRY], self.hungry_bar_rect, HUNGRY_COLOR, self.hungry_image)
-        self._show_bar(player.temperature, player.stats[TEMPERATURE], self.temperature_bar_rect, TEMPERATURE_COLOR, self.temperature_image)
+        self._show_bar(player.temperature, player.stats[TEMPERATURE], self.temperature_bar_rect, TEMPERATURE_COLOR,
+                       self.temperature_image)
         self._show_bar(player.water, player.stats[WATER], self.water_bar_rect, WATER_COLOR, self.water_image)
 
         x, y = self.display_surface.get_size()
@@ -62,9 +63,28 @@ class UiGame:
         self.display_surface.blit(text_surf, (x - 250, y - 50))
 
     def start_game(self) -> bool:
-        print("start game")
-        return True
+        img = load_image("game_menu", "start_game.png")
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    return False
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        return True
+            self.display_surface.blit(img, (0, 0))
+            pygame.display.flip()
 
-    def end_game(self) -> None:
-        print("end game")
-
+    def end_game(self, player) -> None:
+        text_surf = self.font.render(f"Ты умер! Вот твои финальные очки: {player.score}", False, TEXT_COLOR)
+        x, y = self.display_surface.get_size()[0] // 2 - text_surf.get_size()[0], self.display_surface.get_size()[
+            1] // 2 - text_surf.get_size()[1]
+        while True:
+            self.display_surface.fill((0, 0, 0))
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    return
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        return
+            self.display_surface.blit(text_surf, (x, y))
+            pygame.display.flip()
